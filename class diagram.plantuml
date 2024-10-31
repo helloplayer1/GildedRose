@@ -1,0 +1,76 @@
+@startuml
+
+class Simulation {
+  List<Product>:  products
+  Cart: cart
+  List<Currency>: currencies
+  ---
+  void : NextDay()
+}
+
+class Cart {
+  List<Product> : Products
+  List<IDiscountStrategy> : discounts
+  ---
+  AddProduct()
+  DeleteProduct()
+  GetTotalPrice()
+}
+
+
+class Currency {
+  string : isoCode
+  decimal : exchangeRate
+  ---
+  decimal : Convert(decimal priceInEur)
+}
+
+class Product {
+  decimal : Price
+  int : Quality
+  int : SellInDays
+  int : ProductId
+  List<IPriceStrategy>: PriceStrategies
+  List<IQualityStrategy>: QualityStrategies
+  ---
+  decimal : GetPrice(Currcency currcency)
+  int : GetQuality()
+}
+
+interface IPriceStrategy {
+  decimal : CalculatePrice()  
+}
+
+interface ICardDiscountStrategy {
+  decimal : CalculateDiscountedPrice()  
+}
+
+interface IQualityStrategy {
+  decimal : CalculateQuality()  
+}
+
+class BulkStrategy
+class AgedBrieStrategy
+class ConjuredStrategy
+class SulfurasStrategy
+class BackstagePassStrategy
+
+IPriceStrategy <|-- AgedBrieStrategy
+IQualityStrategy <|-- AgedBrieStrategy
+IPriceStrategy <|-- ConjuredStrategy
+IQualityStrategy <|-- ConjuredStrategy
+IPriceStrategy <|-- SulfurasStrategy
+IQualityStrategy <|-- SulfurasStrategy
+IPriceStrategy <|-- BackstagePassStrategy
+IQualityStrategy <|-- BackstagePassStrategy
+
+ICardDiscountStrategy <|-- BulkStrategy
+
+Cart "0..1" o-- "*" Product
+Cart "*" o-- "*" ICardDiscountStrategy 
+
+Simulation "0..1" o-- "1..*" Product
+Simulation "0..1" o-- "1" Cart
+Simulation "0..1" o-- "1..*" Currency
+
+@enduml
