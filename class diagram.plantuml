@@ -34,7 +34,7 @@ class Product {
   List<IQualityStrategy>: QualityStrategies
   ---
   decimal : GetPrice(Currcency currcency)
-  int : GetQuality()
+  void : UpdateQuality()
 }
 
 interface IPriceStrategy {

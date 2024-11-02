@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GildedRoseApp.Interfaces;
+﻿using GildedRoseApp.Interfaces;
 
 namespace GildedRoseApp.Entities
 {
@@ -11,8 +6,7 @@ namespace GildedRoseApp.Entities
         string name, 
         int sellInDays, 
         int quality,
-        decimal price,
-        int productId, 
+        decimal basePrice,
         List<IPriceStrategy> priceStrategies, 
         IQualityStrategy qualityStrategy)
     {
@@ -22,18 +16,43 @@ namespace GildedRoseApp.Entities
 
         public int Quality { get; set; } = quality;
 
-        public decimal Price { get; set; } = price;
-
-        public int ProductId { get; set; } = productId;
+        public decimal BasePrice { get; set; } = basePrice;
 
         public List<IPriceStrategy> PriceStrategies { get; init; } = priceStrategies;
 
         public IQualityStrategy QualityStrategy { get; init; } = qualityStrategy;
 
-        public decimal GetPrice(Currency currency) => currency.ConvertTo(PriceStrategies.Aggregate(
-            Price, 
-            (result, strategy) => strategy.CalculatePrice(result)));
+        public decimal GetPrice(Currency currency)
+        {
+            if(PriceStrategies.Count == 0)
+            {
+                return currency.ConvertTo(BasePrice);
+            }
 
-        public void UpdateQuality() => QualityStrategy.UpdateQuality(this);
+            return currency.ConvertTo(PriceStrategies.Aggregate(
+            BasePrice,
+            (result, strategy) => strategy.CalculatePrice(this, result)));
+        }
+
+        public void UpdateQuality()
+        {
+            if(QualityStrategy == null)
+            {
+                return;
+            }
+
+            QualityStrategy.UpdateQuality(this);
+            
+            if (Quality < 0)
+            {
+                Quality = 0;
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"Name: {Name}, SellInDays: {SellInDays}, Quality: {Quality}, Price: {GetPrice(Currency.EUR_BASE):F2}";
+        }
+
     }
 }

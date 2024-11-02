@@ -1,4 +1,5 @@
 ﻿using GildedRoseApp.Entities;
+using System.ComponentModel;
 
 namespace GildedRoseApp.Interfaces
 {

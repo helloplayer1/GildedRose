@@ -7,25 +7,33 @@ using GildedRoseApp.Interfaces;
 
 namespace GildedRoseApp.Entities
 {
-    public class Cart
+    public class Cart(List<Product> products, List<ICartDiscountStrategy>? discountStrategies)
     {
-        public List<Product> Products { get; } = [];
-        public List<ICartDiscountStrategy> DiscountStrategies { get; } = [];
 
-        public void AddProduct(Product product)
+        public List<Product> Products { get; init; } = products;
+        public List<ICartDiscountStrategy>? DiscountStrategies { get; init; } = discountStrategies;
+
+        public decimal GetTotalPrice(Currency currency)
         {
-            Products.Add(product);
-        }
+            if(Products.Count == 0)
+            {
+                return 0;
+            }
 
-        public void RemoveProduct(Product product)
-        {
-            Products.Remove(product);
-        }
-
-        public decimal GetTotalPrice(Currency currency) => Products.Aggregate(
+            decimal totalValue = Products.Aggregate(
                 0m,
                 (result, product) => result + product.GetPrice(currency)
             );
 
+            if(DiscountStrategies == null || DiscountStrategies.Count == 0)
+            {
+                return totalValue;
+            }
+
+            return DiscountStrategies.Aggregate(
+                totalValue,
+                (result, strategy) => strategy.CalculateDiscountedPrice(this, result)
+            );
+        }
     }
 }

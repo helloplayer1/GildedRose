@@ -12,11 +12,15 @@ namespace GildedRoseApp.Entities
 
         public Cart Cart { get; init; } = cart;
 
-        List<Currency> Currencies { get; init; } = currencies;
+        public List<Currency> Currencies { get; init; } = currencies;
 
         public void NextDay()
         {
-            throw new NotImplementedException();
+            foreach (var product in Products)
+            {
+                product.SellInDays--;
+                product.UpdateQuality();
+            }
         }
     }
 }
