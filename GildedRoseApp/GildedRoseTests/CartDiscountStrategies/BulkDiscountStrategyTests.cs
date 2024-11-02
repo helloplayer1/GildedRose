@@ -14,14 +14,14 @@ namespace GildedRoseTests
         public void Constructor_ShouldThrowArgumentException_WhenDiscountPercentageIsLessThanZero()
         {
             // Arrange, Act & Assert
-            Assert.Throws<ArgumentException>(() => new BulkDiscountStrategy(-0.1m, 10));
+            Assert.Throws<ArgumentException>(() => new BulkCartDiscountStrategy(-0.1m, 10));
         }
 
         [Test]
         public void Constructor_ShouldThrowArgumentException_WhenDiscountPercentageIsGreaterThanOne()
         {
             // Arrange, Act & Assert
-            Assert.Throws<ArgumentException>(() => new BulkDiscountStrategy(1.1m, 10));
+            Assert.Throws<ArgumentException>(() => new BulkCartDiscountStrategy(1.1m, 10));
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace GildedRoseTests
                 new Product("Product 1", 10, 20, 100m, new List<IPriceStrategy>(), Mock.Of<IQualityStrategy>()),
                 new Product("Product 2", 10, 20, 100m, new List<IPriceStrategy>(), Mock.Of<IQualityStrategy>())
             }, null);
-            var strategy = new BulkDiscountStrategy(0.2m, 3);
+            var strategy = new BulkCartDiscountStrategy(0.2m, 3);
             decimal interimPrice = 200m;
 
             // Act
@@ -53,7 +53,7 @@ namespace GildedRoseTests
                 new Product("Product 2", 10, 20, 100m, new List<IPriceStrategy>(), Mock.Of<IQualityStrategy>()),
                 new Product("Product 3", 10, 20, 100m, new List<IPriceStrategy>(), Mock.Of<IQualityStrategy>())
             },null);
-            var strategy = new BulkDiscountStrategy(0.2m, 3);
+            var strategy = new BulkCartDiscountStrategy(0.2m, 3);
             decimal interimPrice = 300m;
 
             // Act
@@ -74,7 +74,7 @@ namespace GildedRoseTests
                 new Product("Product 3", 10, 20, 100m, new List<IPriceStrategy>(), Mock.Of<IQualityStrategy>()),
                 new Product("Product 4", 10, 20, 100m, new List<IPriceStrategy>(), Mock.Of<IQualityStrategy>())
             }, null);
-            var strategy = new BulkDiscountStrategy(0.2m, 3);
+            var strategy = new BulkCartDiscountStrategy(0.2m, 3);
             decimal interimPrice = 400m;
 
             // Act

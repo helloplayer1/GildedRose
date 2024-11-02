@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace GildedRoseApp.Strategies.CartDiscount
 {
-    public class BulkDiscountStrategy : ICartDiscountStrategy
+    public class BulkCartDiscountStrategy : ICartDiscountStrategy
     {
         public decimal DiscountPercentage { get; init; }
         public int PieceAmount { get; init; }
-        public BulkDiscountStrategy(decimal discountPercentage, int pieceAmount)
+        public BulkCartDiscountStrategy(decimal discountPercentage, int pieceAmount)
         {
             DiscountPercentage = discountPercentage;
             PieceAmount = pieceAmount;

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace GildedRoseApp.Strategies.Price
 {
-    public class PercentagePriceDiscountStrategy : IPriceStrategy
+    public class PercentageDiscountPriceStrategy : IPriceStrategy
     {
         private decimal DiscountPercentage { get; init; }
 
-        public PercentagePriceDiscountStrategy(decimal discountPercentage)
+        public PercentageDiscountPriceStrategy(decimal discountPercentage)
         {
             DiscountPercentage = discountPercentage;
 

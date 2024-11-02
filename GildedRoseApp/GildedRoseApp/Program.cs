@@ -10,7 +10,7 @@ TicketQualityStrategy ticketQualityStrategy = new();
 ConjuredQualityStrategy conjuredQualityStrategy = new();
 
 DefaultPriceStrategy defaultPriceStrategy = new();
-PercentagePriceDiscountStrategy percentagePriceDiscountStrategy = new(0.1m); // 10% discount
+PercentageDiscountPriceStrategy percentagePriceDiscountStrategy = new(0.1m); // 10% discount
 
 List<Product> products = [
     new(name:"+5 Dexterity Vest",
@@ -57,7 +57,7 @@ List<Product> products = [
     )
 ];
 
-Cart cart = new(products, [new BulkDiscountStrategy(0.1m, 5)]);
+Cart cart = new(products, [new BulkCartDiscountStrategy(0.1m, 5)]);
 
 List<Currency> currencies = [
     Currency.EUR_BASE,

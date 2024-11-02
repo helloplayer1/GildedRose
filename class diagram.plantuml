@@ -1,73 +1,84 @@
 @startuml
 
 class Simulation {
-  List<Product>:  products
-  Cart: cart
-  List<Currency>: currencies
+  List<Product>:  Products
+  Cart: Cart
+  List<Currency>: Currencies
   ---
   void : NextDay()
 }
 
 class Cart {
   List<Product> : Products
-  List<ICartDiscountStrategy> : discounts
+  List<ICartDiscountStrategy> : DiscountStrategies
   ---
-  AddProduct()
-  RemoveProduct()
-  GetTotalPrice()
+  decimal : GetTotalPrice(Currency currency)
 }
 
 
 class Currency {
-  string : isoCode
-  decimal : exchangeRate
+  string : IsoCode
+  decimal : ExchangeRate
   ---
-  decimal : Convert(decimal amount, Currency currency)
+  decimal : ConvertTo(decimal amount, Currency fromCurrency)
 }
 
 class Product {
+  string : Name
   decimal : Price
   int : Quality
   int : SellInDays
-  int : ProductId
   List<IPriceStrategy>: PriceStrategies
-  List<IQualityStrategy>: QualityStrategies
+  IQualityStrategy: QualityStrategy
   ---
-  decimal : GetPrice(Currcency currcency)
+  decimal : GetPrice(Currcency currency)
   void : UpdateQuality()
 }
 
 interface IPriceStrategy {
-  decimal : CalculatePrice()  
+  decimal : CalculatePrice(Product product, decimal interimPrice)  
 }
 
 interface ICartDiscountStrategy {
-  decimal : CalculateDiscountedPrice()  
+  decimal : CalculateDiscountedPrice(Cart cart, decimal interimPrice)  
 }
 
 interface IQualityStrategy {
-  decimal : CalculateQuality()  
+  void: UpdateQuality(Product product)  
 }
 
-class BulkStrategy
-class AgedBrieStrategy
-class ConjuredStrategy
-class SulfurasStrategy
-class BackstagePassStrategy
+class DefaultQualityStrategy
+class AgedQualityStrategy
+class ConjuredQualityStrategy
+class LegendaryQualityStrategy
+class TicketQualityStrategy
 
-IPriceStrategy <|-- AgedBrieStrategy
-IQualityStrategy <|-- AgedBrieStrategy
-IPriceStrategy <|-- ConjuredStrategy
-IQualityStrategy <|-- ConjuredStrategy
-IPriceStrategy <|-- SulfurasStrategy
-IQualityStrategy <|-- SulfurasStrategy
-IPriceStrategy <|-- BackstagePassStrategy
-IQualityStrategy <|-- BackstagePassStrategy
+class DefaultPriceStrategy
+class PercentageDiscountPriceStrategy {
+  decimal: DiscountPercentage
+}
 
-ICartDiscountStrategy <|-- BulkStrategy
+class BulkCartDiscountStrategy {
+  decimal: DiscountPercentage
+  int: PieceAmount
+}
+
+IPriceStrategy <|-- DefaultPriceStrategy
+IPriceStrategy <|-- PercentageDiscountPriceStrategy
+
+IQualityStrategy <|-- DefaultQualityStrategy
+IQualityStrategy <|-- AgedQualityStrategy
+IQualityStrategy <|-- ConjuredQualityStrategy
+IQualityStrategy <|-- LegendaryQualityStrategy
+IQualityStrategy <|-- TicketQualityStrategy
+
+ICartDiscountStrategy <|-- BulkCartDiscountStrategy
 
 Cart "0..1" o-- "*" Product
-Cart "*" o-- "*" ICartDiscountStrategy 
+Cart "*" o-- "*" ICartDiscountStrategy
+
+Product "*" o-- "*" IPriceStrategy
+Product "*" o-- "0..1" IQualityStrategy
 
 Simulation "0..1" o-- "1..*" Product
 Simulation "0..1" o-- "1" Cart
