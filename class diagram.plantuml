@@ -10,10 +10,10 @@ class Simulation {
 
 class Cart {
   List<Product> : Products
-  List<IDiscountStrategy> : discounts
+  List<ICartDiscountStrategy> : discounts
   ---
   AddProduct()
-  DeleteProduct()
+  RemoveProduct()
   GetTotalPrice()
 }
 
@@ -22,7 +22,7 @@ class Currency {
   string : isoCode
   decimal : exchangeRate
   ---
-  decimal : Convert(decimal priceInEur)
+  decimal : Convert(decimal amount, Currency currency)
 }
 
 class Product {
@@ -41,7 +41,7 @@ interface IPriceStrategy {
   decimal : CalculatePrice()  
 }
 
-interface ICardDiscountStrategy {
+interface ICartDiscountStrategy {
   decimal : CalculateDiscountedPrice()  
 }
 
@@ -64,10 +64,10 @@ IQualityStrategy <|-- SulfurasStrategy
 IPriceStrategy <|-- BackstagePassStrategy
 IQualityStrategy <|-- BackstagePassStrategy
 
-ICardDiscountStrategy <|-- BulkStrategy
+ICartDiscountStrategy <|-- BulkStrategy
 
 Cart "0..1" o-- "*" Product
-Cart "*" o-- "*" ICardDiscountStrategy 
+Cart "*" o-- "*" ICartDiscountStrategy 
 
 Simulation "0..1" o-- "1..*" Product
 Simulation "0..1" o-- "1" Cart
